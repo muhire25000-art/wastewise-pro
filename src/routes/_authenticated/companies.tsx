@@ -46,13 +46,13 @@ function Companies() {
   const { data: companies } = useQuery({ queryKey: ["companies"], queryFn: fetchCompanies });
 
   const addCompany = useMutation({
-    mutationFn: async (values: Record<string, string>) => {
+    mutationFn: async (get: (k: string) => string) => {
       const { error } = await supabase.from("companies").insert({
-        name: values.name,
-        registration_number: values.registration_number,
-        address: values.address,
-        phone: values.phone,
-        email: values.email,
+        name: get("name"),
+        registration_number: get("registration_number"),
+        address: get("address"),
+        phone: get("phone"),
+        email: get("email"),
       });
       if (error) throw error;
     },
@@ -65,13 +65,13 @@ function Companies() {
   });
 
   const addManager = useMutation({
-    mutationFn: async (values: Record<string, string>) =>
+    mutationFn: async (get: (k: string) => string) =>
       createUserAccount({
         data: {
-          email: values.email,
-          password: values.password,
-          full_name: values.full_name,
-          phone: values.phone,
+          email: get("email"),
+          password: get("password"),
+          full_name: get("full_name"),
+          phone: get("phone"),
           role: "company_admin",
           company_id: managerFor!.id,
         },
