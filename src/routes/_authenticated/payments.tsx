@@ -50,6 +50,11 @@ function Payments() {
   const { data: payments } = useQuery({ queryKey: ["payments"], queryFn: fetchPayments });
   const { data: customers } = useQuery({ queryKey: ["customers"], queryFn: fetchCustomers });
 
+  function requireCompany() {
+    if (!companyId) throw new Error("Your account is not linked to a company yet.");
+    return companyId;
+  }
+
   const staff = role === "admin" || role === "company_admin" || role === "employee";
 
   const recordPayment = useMutation({
@@ -60,11 +65,11 @@ function Payments() {
         .insert({
           customer_id: get("customer_id"),
           amount: Number(get("amount")),
-          method: get("method"),
-          reference: get("reference"),
+          payment_method: get("method"),
+          transaction_reference: get("reference"),
           payment_date: get("payment_date") || new Date().toISOString().slice(0, 10),
           status,
-          company_id: companyId,
+          company_id: requireCompany(),
         })
         .select("id, amount")
         .single();
@@ -72,7 +77,8 @@ function Payments() {
       if (status === "paid") {
         await supabase.from("digital_receipts").insert({
           payment_id: data.id,
-          receipt_number: `ISK-${Date.now().toString().slice(-8)}`,
+          company_id: requireCompany(),
+          barcode: `ISK-${Date.now().toString().slice(-8)}`,
         });
       }
     },
@@ -90,7 +96,8 @@ function Payments() {
       if (error) throw error;
       await supabase.from("digital_receipts").insert({
         payment_id: id,
-        receipt_number: `ISK-${Date.now().toString().slice(-8)}`,
+        company_id: requireCompany(),
+        barcode: `ISK-${Date.now().toString().slice(-8)}`,
       });
     },
     onSuccess: () => {
@@ -244,7 +251,7 @@ function Payments() {
                 <TableCell className="font-medium">{p.customers?.name ?? "—"}</TableCell>
                 <TableCell>{p.customers?.locations?.district ?? "—"}</TableCell>
                 <TableCell className="capitalize">
-                  {(p.method ?? "—").toString().replace("_", " ")}
+                  {(p.payment_method ?? "—").toString().replace("_", " ")}
                 </TableCell>
                 <TableCell>{money(p.amount)}</TableCell>
                 <TableCell>

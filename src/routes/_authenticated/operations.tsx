@@ -47,6 +47,11 @@ function Operations() {
   const [routeOpen, setRouteOpen] = useState(false);
   const [vehicleOpen, setVehicleOpen] = useState(false);
 
+  function requireCompany() {
+    if (!companyId) throw new Error("Your account is not linked to a company yet.");
+    return companyId;
+  }
+
   const { data: schedules } = useQuery({ queryKey: ["schedules"], queryFn: fetchSchedules });
   const { data: routes } = useQuery({ queryKey: ["routes"], queryFn: fetchRoutes });
   const { data: vehicles } = useQuery({ queryKey: ["vehicles"], queryFn: fetchVehicles });
@@ -62,7 +67,7 @@ function Operations() {
         collection_date: get("collection_date"),
         time_slot: get("time_slot"),
         notes: get("notes"),
-        company_id: companyId,
+        company_id: requireCompany(),
       });
       if (error) throw error;
     },
@@ -80,7 +85,7 @@ function Operations() {
         route_name: get("route_name"),
         vehicle_id: get("vehicle_id") || null,
         start_time: get("start_time") || null,
-        company_id: companyId,
+        company_id: requireCompany(),
       });
       if (error) throw error;
     },
@@ -96,9 +101,9 @@ function Operations() {
     mutationFn: async (get: (k: string) => string) => {
       const { error } = await supabase.from("vehicles").insert({
         plate_number: get("plate_number"),
-        vehicle_type: get("vehicle_type"),
-        capacity_kg: get("capacity_kg") ? Number(get("capacity_kg")) : null,
-        company_id: companyId,
+        type: get("vehicle_type"),
+        capacity: get("capacity_kg") || null,
+        company_id: requireCompany(),
       });
       if (error) throw error;
     },
@@ -163,7 +168,7 @@ function Operations() {
                         <option value="">Select subscription</option>
                         {(subscriptions ?? []).map((s) => (
                           <option key={s.id} value={s.id}>
-                            {s.customers?.name ?? "Customer"} · {s.plan_name}
+                            {s.customers?.name ?? "Customer"} · {s.plan_type}
                           </option>
                         ))}
                       </select>
@@ -376,8 +381,8 @@ function Operations() {
                 {(vehicles ?? []).map((v) => (
                   <TableRow key={v.id}>
                     <TableCell className="font-medium">{v.plate_number}</TableCell>
-                    <TableCell>{v.vehicle_type ?? "—"}</TableCell>
-                    <TableCell>{v.capacity_kg ? `${v.capacity_kg} kg` : "—"}</TableCell>
+                    <TableCell>{v.type ?? "—"}</TableCell>
+                    <TableCell>{v.capacity ?? "—"}</TableCell>
                     <TableCell>
                       <Badge variant="outline">{v.status}</Badge>
                     </TableCell>
