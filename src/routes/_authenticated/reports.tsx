@@ -39,7 +39,7 @@ export const Route = createFileRoute("/_authenticated/reports")({
       { property: "og:description", content: "Revenue trends and payment behaviour per location." },
     ],
   }),
-  component: Reports;
+  component: Reports,
 });
 
 const GREEN = "oklch(0.72 0.18 152)";
