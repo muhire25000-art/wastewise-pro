@@ -16,7 +16,9 @@ import { Route as ContactRouteImport } from './routes/contact'
 import { Route as PricingRouteImport } from './routes/pricing'
 import { Route as ServicesRouteImport } from './routes/services'
 import { Route as AuthenticatedCompaniesRouteImport } from './routes/_authenticated/companies'
+import { Route as AuthenticatedCustomersRouteImport } from './routes/_authenticated/customers'
 import { Route as AuthenticatedDashboardRouteImport } from './routes/_authenticated/dashboard'
+import { Route as AuthenticatedStaffRouteImport } from './routes/_authenticated/staff'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
@@ -52,9 +54,19 @@ const AuthenticatedCompaniesRoute = AuthenticatedCompaniesRouteImport.update({
   path: '/companies',
   getParentRoute: () => AuthenticatedRouteRoute,
 } as any)
+const AuthenticatedCustomersRoute = AuthenticatedCustomersRouteImport.update({
+  id: '/customers',
+  path: '/customers',
+  getParentRoute: () => AuthenticatedRouteRoute,
+} as any)
 const AuthenticatedDashboardRoute = AuthenticatedDashboardRouteImport.update({
   id: '/dashboard',
   path: '/dashboard',
+  getParentRoute: () => AuthenticatedRouteRoute,
+} as any)
+const AuthenticatedStaffRoute = AuthenticatedStaffRouteImport.update({
+  id: '/staff',
+  path: '/staff',
   getParentRoute: () => AuthenticatedRouteRoute,
 } as any)
 
@@ -65,7 +77,9 @@ export interface FileRoutesByFullPath {
   '/pricing': typeof PricingRoute
   '/services': typeof ServicesRoute
   '/companies': typeof AuthenticatedCompaniesRoute
+  '/customers': typeof AuthenticatedCustomersRoute
   '/dashboard': typeof AuthenticatedDashboardRoute
+  '/staff': typeof AuthenticatedStaffRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
@@ -74,7 +88,9 @@ export interface FileRoutesByTo {
   '/pricing': typeof PricingRoute
   '/services': typeof ServicesRoute
   '/companies': typeof AuthenticatedCompaniesRoute
+  '/customers': typeof AuthenticatedCustomersRoute
   '/dashboard': typeof AuthenticatedDashboardRoute
+  '/staff': typeof AuthenticatedStaffRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -85,7 +101,9 @@ export interface FileRoutesById {
   '/pricing': typeof PricingRoute
   '/services': typeof ServicesRoute
   '/_authenticated/companies': typeof AuthenticatedCompaniesRoute
+  '/_authenticated/customers': typeof AuthenticatedCustomersRoute
   '/_authenticated/dashboard': typeof AuthenticatedDashboardRoute
+  '/_authenticated/staff': typeof AuthenticatedStaffRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -96,7 +114,9 @@ export interface FileRouteTypes {
     | '/pricing'
     | '/services'
     | '/companies'
+    | '/customers'
     | '/dashboard'
+    | '/staff'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
@@ -105,7 +125,9 @@ export interface FileRouteTypes {
     | '/pricing'
     | '/services'
     | '/companies'
+    | '/customers'
     | '/dashboard'
+    | '/staff'
   id:
     | '__root__'
     | '/'
@@ -115,7 +137,9 @@ export interface FileRouteTypes {
     | '/pricing'
     | '/services'
     | '/_authenticated/companies'
+    | '/_authenticated/customers'
     | '/_authenticated/dashboard'
+    | '/_authenticated/staff'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -178,6 +202,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedCompaniesRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
+    '/_authenticated/customers': {
+      id: '/_authenticated/customers'
+      path: '/customers'
+      fullPath: '/customers'
+      preLoaderRoute: typeof AuthenticatedCustomersRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
     '/_authenticated/dashboard': {
       id: '/_authenticated/dashboard'
       path: '/dashboard'
@@ -185,17 +216,28 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedDashboardRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
+    '/_authenticated/staff': {
+      id: '/_authenticated/staff'
+      path: '/staff'
+      fullPath: '/staff'
+      preLoaderRoute: typeof AuthenticatedStaffRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
   }
 }
 
 interface AuthenticatedRouteRouteChildren {
   AuthenticatedCompaniesRoute: typeof AuthenticatedCompaniesRoute
+  AuthenticatedCustomersRoute: typeof AuthenticatedCustomersRoute
   AuthenticatedDashboardRoute: typeof AuthenticatedDashboardRoute
+  AuthenticatedStaffRoute: typeof AuthenticatedStaffRoute
 }
 
 const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
   AuthenticatedCompaniesRoute: AuthenticatedCompaniesRoute,
+  AuthenticatedCustomersRoute: AuthenticatedCustomersRoute,
   AuthenticatedDashboardRoute: AuthenticatedDashboardRoute,
+  AuthenticatedStaffRoute: AuthenticatedStaffRoute,
 }
 
 const AuthenticatedRouteRouteWithChildren =
