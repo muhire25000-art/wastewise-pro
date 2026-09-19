@@ -51,7 +51,10 @@ function AuthPage() {
       password: String(form.get("password")),
     });
     setLoading(false);
-    if (error) return toast.error(error.message);
+    if (error) {
+      toast.error(error.message);
+      return;
+    }
     toast.success("Welcome back");
   }
 
@@ -72,7 +75,10 @@ function AuthPage() {
       },
     });
     setLoading(false);
-    if (error) return toast.error(error.message);
+    if (error) {
+      toast.error(error.message);
+      return;
+    }
     if (!data.session) {
       toast.success("Account created. Check your email to confirm it.");
     }
