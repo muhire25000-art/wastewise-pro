@@ -25,6 +25,7 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { fetchCompanies } from "@/lib/queries";
+import { formGetter } from "@/lib/form";
 
 export const Route = createFileRoute("/_authenticated/companies")({
   head: () => ({
@@ -103,8 +104,7 @@ function Companies() {
               className="space-y-3"
               onSubmit={(e) => {
                 e.preventDefault();
-                const f = new FormData(e.currentTarget);
-                addCompany.mutate(Object.fromEntries(f) as Record<string, string>);
+                addCompany.mutate(formGetter(e.currentTarget));
               }}
             >
               {[
@@ -178,8 +178,7 @@ function Companies() {
             className="space-y-3"
             onSubmit={(e) => {
               e.preventDefault();
-              const f = new FormData(e.currentTarget);
-              addManager.mutate(Object.fromEntries(f) as Record<string, string>);
+              addManager.mutate(formGetter(e.currentTarget));
             }}
           >
             <div className="space-y-1.5">
